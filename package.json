@@ -1,0 +1,46 @@
+{
+  "name": "mongoose-app-query",
+  "version": "1.0.0",
+  "description": "Reusable Mongoose query handler for search, sort, pagination, and filtering.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "jest",
+    "build": "tsc",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --fix --ext .ts",
+    "prettier": "prettier --write \"src/**/*.{ts,json}\"",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "mongoose",
+    "query",
+    "pagination",
+    "filter",
+    "sort"
+  ],
+  "author": "Foysal Ahmed",
+  "license": "MIT",
+  "dependencies": {
+    "mongoose": "^8.16.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.8",
+    "@typescript-eslint/eslint-plugin": "^8.35.1",
+    "@typescript-eslint/parser": "^8.35.1",
+    "eslint": "^9.30.0",
+    "eslint-plugin-prettier": "^5.5.1",
+    "husky": "^9.1.7",
+    "jest": "^30.0.4",
+    "mongodb-memory-server": "^10.1.4",
+    "prettier": "^3.6.2",
+    "ts-jest": "^29.4.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3"
+  }
+}
