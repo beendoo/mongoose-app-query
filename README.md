@@ -95,7 +95,7 @@ const result = await new AppQuery(UserModel.find(), req.query)
   .filter()
   .sort()
   .fields()
-  .paginate({ maxLimit: 50 })
+  .paginate()
   .execute();
 ```
 
@@ -129,7 +129,7 @@ const result = await new AppQuery(UserModel.find(), req.query)
 | `filter()`   | Applies filtering using query key-value pairs                              |
 | `sort()`     | Sorts results, e.g. `?sort=name` or `?sort=-createdAt`                     |
 | `fields()`   | Selects fields to include, e.g. `?fields=name,email`                       |
-| `paginate()` | Adds pagination via `?page=1&limit=10`, optional `{ maxLimit }` config     |
+| `paginate()` | Adds pagination via `?page=1&limit=10`                                     |
 | `lean()`     | Returns plain JavaScript objects instead of Mongoose documents             |
 | `execute()`  | Runs the query, returns result and meta info                               |
 
