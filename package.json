@@ -1,7 +1,6 @@
 {
   "name": "mongoose-app-query",
   "version": "1.0.0",
-  "description": "Reusable Mongoose query handler for search, sort, pagination, and filtering.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -25,6 +24,11 @@
   ],
   "author": "Foysal Ahmed",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/mongoose-app-query"
+  },
+  "description": "Reusable Mongoose query handler for search, sort, pagination, and filtering.",
   "dependencies": {
     "mongoose": "^8.16.1"
   },
