@@ -193,3 +193,9 @@ pnpm test
 ## 📝 License
 
 MIT © [Foysal Ahmed](https://github.com/foysalahmedmin)
+
+<!--
+npm version patch   # for 1.0.0 -> 1.0.1
+npm version minor   # for 1.0.0 -> 1.1.0
+npm version major   # for 1.0.0 -> 2.0.0
+-->
