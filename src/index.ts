@@ -1,1 +1,1 @@
-export { default as AppQuery } from './app';
+export { default as MongooseQuery } from './app';

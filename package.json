@@ -1,6 +1,6 @@
 {
-  "name": "mongoose-app-query",
-  "version": "1.0.1",
+  "name": "mongoose-query-kit",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -27,7 +27,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/mongoose-app-query"
+    "url": "https://github.com/beendoo/mongoose-query-kit.git"
   },
   "description": "Reusable Mongoose query handler for search, sort, pagination, and filtering.",
   "dependencies": {

@@ -1,4 +1,4 @@
-﻿# mongoose-app-query
+﻿# Mongoose Query Kit
 
 A wrapper class that enhances Mongoose queries with clean chaining for pagination, filtering, searching, sorting, field selection, and lean query support.
 
@@ -22,18 +22,18 @@ A wrapper class that enhances Mongoose queries with clean chaining for paginatio
 ## 📦 Installation
 
 ```bash
-npm install mongoose-app-query
+npm install mongoose-query-kit
 # or
-yarn add mongoose-app-query
+yarn add mongoose-query-kit
 # or
-pnpm add mongoose-app-query
+pnpm add mongoose-query-kit
 ```
 
 ---
 
 ## 🔗 Frontend-Driven Queries (Single API Endpoint Design)
 
-Using `AppQuery` allows your frontend to send query parameters directly, enabling dynamic filtering, pagination, searching, and sorting—all through a single API endpoint.
+Using `MongooseQuery` allows your frontend to send query parameters directly, enabling dynamic filtering, pagination, searching, and sorting—all through a single API endpoint.
 
 This design pattern makes your backend flexible and minimizes code repetition.
 
@@ -64,19 +64,21 @@ fetch(`/api/users?${query}`);
 #### Backend Code
 
 ```ts
-import { AppQuery } from 'mongoose-app-query';
+import { MongooseQuery } from 'mongoose-query-kit';
 import UserModel from '../models/user.model';
 
 const getUsers = async (req, res) => {
   const searchableFields = ['name', 'email'];
 
-  const result = await new AppQuery(UserModel.find(), req.query)
+  const ResultQuery = await new MongooseQuery(UserModel.find(), req.query)
     .search(searchableFields)
     .filter()
     .sort()
     .fields()
     .paginate()
-    .execute();
+    .tap((q) => q.lean());
+
+  const result = ResultQuery.execute();
 
   res.json(result);
 };
@@ -89,24 +91,25 @@ const getUsers = async (req, res) => {
 ### Full Example
 
 ```ts
-const result = await new AppQuery(UserModel.find(), req.query)
+const result = await new MongooseQuery(UserModel.find(), req.query)
   .lean()
   .search(['name', 'email'])
   .filter()
   .sort()
   .fields()
   .paginate()
+  .tap((q) => q.lean())
   .execute();
 ```
 
 ### Count Only Query
 
-If your query includes `is_only_count=true`, `AppQuery` will return only the total count in the response, skipping data fetching for performance.
+If your query includes `is_only_count=true`, `MongooseQuery` will return only the total count in the response, skipping data fetching for performance.
 
 ```ts
 // Query string: ?is_only_count=true
 
-const result = await new AppQuery(UserModel.find(), req.query)
+const result = await new MongooseQuery(UserModel.find(), req.query)
   .filter()
   .execute();
 
@@ -130,7 +133,7 @@ const result = await new AppQuery(UserModel.find(), req.query)
 | `sort()`     | Sorts results, e.g. `?sort=name` or `?sort=-createdAt`                     |
 | `fields()`   | Selects fields to include, e.g. `?fields=name,email`                       |
 | `paginate()` | Adds pagination via `?page=1&limit=10`                                     |
-| `lean()`     | Returns plain JavaScript objects instead of Mongoose documents             |
+| `tap()`      | Provides direct access to modify the underlying Mongoose query.            |
 | `execute()`  | Runs the query, returns result and meta info                               |
 
 ---
@@ -168,7 +171,7 @@ If `is_only_count=true` is passed in the query, the response will be:
 Fully typed with generics for safe usage:
 
 ```ts
-const result = await new AppQuery<User>(UserModel.find(), req.query)
+const result = await new MongooseQuery<User>(UserModel.find(), req.query)
   .lean()
   .filter()
   .execute();
@@ -186,7 +189,7 @@ pnpm test
 
 ## 🌐 Repository
 
-[https://github.com/beendoo/mongoose-app-query.git](https://github.com/beendoo/mongoose-app-query.git)
+[https://github.com/beendoo/mongoose-query-kit.git](https://github.com/beendoo/mongoose-query-kit.git)
 
 ---
 

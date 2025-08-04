@@ -1,6 +1,6 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { Schema, model } from 'mongoose';
-import AppQuery from '../src/app'; // Adjust import path as needed
+import MongooseQuery from '../src/app'; // Adjust import path as needed
 
 interface IUser extends mongoose.Document {
   name: string;
@@ -42,7 +42,7 @@ describe('AppQuery', () => {
   test('search by name returns correct result', async () => {
     const query = User.find();
     const queryParams = { search: 'ali' };
-    const appQuery = new AppQuery(query, queryParams);
+    const appQuery = new MongooseQuery(query, queryParams);
     const result = await appQuery.search(['name']).execute();
 
     expect(result.data).toHaveLength(1);
@@ -53,7 +53,7 @@ describe('AppQuery', () => {
   test('pagination works correctly', async () => {
     const query = User.find().sort('name'); // consistent order
     const queryParams = { page: '2', limit: '1' };
-    const appQuery = new AppQuery(query, queryParams);
+    const appQuery = new MongooseQuery(query, queryParams);
     const result = await appQuery.paginate().execute();
 
     expect(result.data).toHaveLength(1);
@@ -65,7 +65,7 @@ describe('AppQuery', () => {
   test('count only returns total without data', async () => {
     const query = User.find();
     const queryParams = { is_count_only: 'true' };
-    const appQuery = new AppQuery(query, queryParams);
+    const appQuery = new MongooseQuery(query, queryParams);
     const result = await appQuery.execute();
 
     expect(result.data).toHaveLength(0);
@@ -77,7 +77,7 @@ describe('AppQuery', () => {
   test('filter returns correct documents', async () => {
     const query = User.find();
     const queryParams = { email: 'bob@example.com' };
-    const appQuery = new AppQuery(query, queryParams);
+    const appQuery = new MongooseQuery(query, queryParams);
     const result = await appQuery.filter(['email']).execute();
 
     expect(result.data).toHaveLength(1);
@@ -87,7 +87,7 @@ describe('AppQuery', () => {
   test('sort returns results in correct order', async () => {
     const query = User.find();
     const queryParams = { sort: '-name' };
-    const appQuery = new AppQuery(query, queryParams);
+    const appQuery = new MongooseQuery(query, queryParams);
     const result = await appQuery.sort(['name']).execute();
 
     expect(result.data[0].name).toBe('Charlie');
@@ -97,21 +97,51 @@ describe('AppQuery', () => {
   test('fields limits selected fields', async () => {
     const query = User.find();
     const queryParams = { fields: 'name' };
-    const appQuery = new AppQuery(query, queryParams);
+    const appQuery = new MongooseQuery(query, queryParams);
     const result = await appQuery.fields(['name']).execute();
 
     expect(result.data[0]).toHaveProperty('name');
     expect(result.data[0].email).toBeUndefined();
   });
 
-  test('lean returns plain objects instead of mongoose documents', async () => {
+  test('tap method allows direct query modifications like lean()', async () => {
     const query = User.find();
     const queryParams = {};
-    const appQuery = new AppQuery(query, queryParams);
-    const result = await appQuery.lean().execute();
+    const appQuery = new MongooseQuery(query, queryParams);
+    const result = await appQuery.tap((q) => q.lean()).execute();
 
     expect(result.data).toHaveLength(3);
     expect(typeof result.data[0]).toBe('object');
+    expect('_doc' in result.data[0]).toBe(false);
+  });
+
+  test('tap method allows multiple query modifications', async () => {
+    const query = User.find();
+    const queryParams = {};
+    const appQuery = new MongooseQuery(query, queryParams);
+    const result = await appQuery
+      .tap((q) => q.lean())
+      .tap((q) => q.limit(2))
+      .tap((q) => q.sort({ name: 1 }))
+      .execute();
+
+    expect(result.data).toHaveLength(2);
+    expect(result.data[0].name).toBeDefined();
+    expect('_doc' in result.data[0]).toBe(false);
+  });
+
+  test('tap method maintains method chaining', async () => {
+    const query = User.find();
+    const queryParams = { page: '1', limit: '2' };
+    const appQuery = new MongooseQuery(query, queryParams);
+    const result = await appQuery
+      .filter()
+      .tap((q) => q.lean())
+      .paginate()
+      .execute();
+
+    expect(result.data).toHaveLength(2);
+    expect(result.meta.limit).toBe(2);
     expect('_doc' in result.data[0]).toBe(false);
   });
 });
